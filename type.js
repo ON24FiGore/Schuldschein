@@ -84,10 +84,28 @@ document.addEventListener("DOMContentLoaded", function () {
           renderExpenses();
           renderSummary();
         };
-        groupList.appendChild(li);
+        var delBtn = document.createElement("button");
+      delBtn.textContent = "X";
+      delBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        groups.splice(index, 1);
+        if (currentGroup === group) {
+          currentGroup = null;
+          expenses = [];
+        }
+        saveAll();
+        renderGroups();
+        updatePersonDropdown();
+        renderExpenses();
+        renderSummary();
       });
-    }
+
+      li.appendChild(delBtn);
+      groupList.appendChild(li);
+    });
+  }
   
+
     function updatePersonDropdown() {
       personSelect.innerHTML = "";
       if (!currentGroup) return;

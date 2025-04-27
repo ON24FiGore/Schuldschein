@@ -94,9 +94,26 @@ interface Group {
           renderExpenses();
           renderSummary();
         };
-        groupList.appendChild(li);
-      });
-    }
+        const delBtn = document.createElement("button");
+      delBtn.textContent = "X";
+      delBtn.onclick = (e) => {
+        e.stopPropagation();
+        groups.splice(index, 1);
+        if (currentGroup === group) {
+          currentGroup = null;
+          expenses = [];
+        }
+        saveAll();
+        renderGroups();
+        updatePersonDropdown();
+        renderExpenses();
+        renderSummary();
+      };
+
+      li.appendChild(delBtn);
+      groupList.appendChild(li);
+    });
+  }
   
     function updatePersonDropdown(): void {
       personSelect.innerHTML = "";
