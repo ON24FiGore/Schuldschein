@@ -104,3 +104,12 @@ body {
     width: 48%;
   }
   
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  li {
+    padding: 0.3rem 0;
+    border-bottom: 1px solid #eee;
+  }

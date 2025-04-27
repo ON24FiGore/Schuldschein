@@ -53,6 +53,10 @@ document.addEventListener("DOMContentLoaded", () => {
     groups.push(group);
     currentGroup = group;
     renderGroups();
+    updatePersonDropdown();
+      expenses = [];
+      renderExpenses();
+      renderSummary();
     hideModal();
   });
   function renderGroups(): void {
@@ -64,6 +68,9 @@ document.addEventListener("DOMContentLoaded", () => {
       li.onclick = () => {
         currentGroup = group;
         updatePersonDropdown();
+        expenses = [];
+          renderExpenses();
+          renderSummary();
       };
       groupList.appendChild(li);
     });
@@ -94,6 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     expenses.push(expense);
     renderExpenses();
+    renderSummary();
     expenseForm.reset();
     updatePersonDropdown();
   });
@@ -104,6 +112,30 @@ document.addEventListener("DOMContentLoaded", () => {
       const li = document.createElement("li");
       li.textContent = `${e.description}: €${e.amount.toFixed(2)} (von ${e.paidBy})`;
       expenseList.appendChild(li);
+    });
+  }
+  function renderSummary(): void {
+    if (!currentGroup) return;
+    const balances: { [member: string]: number } = {};
+    const members = currentGroup.members;
+
+    expenses.forEach(exp => {
+      const split = exp.amount / members.length;
+      members.forEach(name => {
+        if (!balances[name]) balances[name] = 0;
+        if (name === exp.paidBy) {
+          balances[name] += exp.amount - split;
+        } else {
+          balances[name] -= split;
+        }
+      });
+    });
+
+    summaryList.innerHTML = "";
+    Object.entries(balances).forEach(([name, balance]) => {
+      const li = document.createElement("li");
+      li.textContent = `${name} ${balance >= 0 ? "bekommt" : "schuldet"} €${Math.abs(balance).toFixed(2)}`;
+      summaryList.appendChild(li);
     });
   }
 });

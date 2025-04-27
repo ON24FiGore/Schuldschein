@@ -51,6 +51,10 @@ document.addEventListener("DOMContentLoaded", function () {
     groups.push(group);
     currentGroup = group;
     renderGroups();
+    updatePersonDropdown();
+    expenses = [];
+    renderExpenses();
+    renderSummary();
     hideModal();
   });
   function renderGroups() {
@@ -62,6 +66,9 @@ document.addEventListener("DOMContentLoaded", function () {
       li.onclick = function () {
         currentGroup = group;
         updatePersonDropdown();
+        expenses = [];
+        renderExpenses();
+        renderSummary();
       };
       groupList.appendChild(li);
     });
@@ -91,7 +98,8 @@ document.addEventListener("DOMContentLoaded", function () {
       paidBy: paidBy
     };
     expenses.push(expense);
-    renderExpenses();   
+    renderExpenses();  
+    renderSummary(); 
     expenseForm.reset();
     updatePersonDropdown();
   });
@@ -102,6 +110,31 @@ document.addEventListener("DOMContentLoaded", function () {
       var li = document.createElement("li");
       li.textContent = e.description + ": €" + e.amount.toFixed(2) + " (von " + e.paidBy + ")";
       expenseList.appendChild(li);
+    });
+  }
+  function renderSummary() {
+    if (!currentGroup) return;
+    var balances = {};
+    var members = currentGroup.members;
+
+    expenses.forEach(function (exp) {
+      var split = exp.amount / members.length;
+      members.forEach(function (name) {
+        if (!balances[name]) balances[name] = 0;
+        if (name === exp.paidBy) {
+          balances[name] += exp.amount - split;
+        } else {
+          balances[name] -= split;
+        }
+      });
+    });
+
+    summaryList.innerHTML = "";
+    Object.entries(balances).forEach(function (_a) {
+      var name = _a[0], balance = _a[1];
+      var li = document.createElement("li");
+      li.textContent = name + " " + (balance >= 0 ? "bekommt" : "schuldet") + " €" + Math.abs(balance).toFixed(2);
+      summaryList.appendChild(li);
     });
   }
 });
