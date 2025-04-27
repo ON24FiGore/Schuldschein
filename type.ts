@@ -76,4 +76,34 @@ document.addEventListener("DOMContentLoaded", () => {
       personSelect.appendChild(new Option(member, member));
     });
   }
+
+  expenseForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (!currentGroup) {
+      alert("Bitte erst eine Gruppe erstellen");
+      return;
+    }
+    const inputs = expenseForm.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
+    const [descInput, amountInput] = inputs;
+    const paidBy = personSelect.value;
+
+    const expense: Expense = {
+      description: descInput.value,
+      amount: parseFloat(amountInput.value),
+      paidBy
+    };
+    expenses.push(expense);
+    renderExpenses();
+    expenseForm.reset();
+    updatePersonDropdown();
+  });
+
+  function renderExpenses(): void {
+    expenseList.innerHTML = "";
+    expenses.forEach(e => {
+      const li = document.createElement("li");
+      li.textContent = `${e.description}: €${e.amount.toFixed(2)} (von ${e.paidBy})`;
+      expenseList.appendChild(li);
+    });
+  }
 });

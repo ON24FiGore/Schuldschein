@@ -75,4 +75,33 @@ document.addEventListener("DOMContentLoaded", function () {
       personSelect.appendChild(opt);
     });
   }
+  expenseForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!currentGroup) {
+      alert("Bitte erst eine Gruppe erstellen");
+      return;
+    }
+    var inputs = expenseForm.querySelectorAll("input");
+    var descInput = inputs[0], amountInput = inputs[1];
+    var paidBy = personSelect.value;
+
+    var expense = {
+      description: descInput.value,
+      amount: parseFloat(amountInput.value),
+      paidBy: paidBy
+    };
+    expenses.push(expense);
+    renderExpenses();   
+    expenseForm.reset();
+    updatePersonDropdown();
+  });
+
+  function renderExpenses() {
+    expenseList.innerHTML = "";
+    expenses.forEach(function (e) {
+      var li = document.createElement("li");
+      li.textContent = e.description + ": €" + e.amount.toFixed(2) + " (von " + e.paidBy + ")";
+      expenseList.appendChild(li);
+    });
+  }
 });
