@@ -36,4 +36,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   (document.getElementById("modalCancel") as HTMLButtonElement).addEventListener("click", hideModal);
   createGroupBtn.addEventListener("click", showModal);
+
+  (document.getElementById("modalCreate") as HTMLButtonElement).addEventListener("click", () => {
+    const groupName = (document.getElementById("modalGroupName") as HTMLInputElement).value.trim();
+    const membersInput = (document.getElementById("modalMembers") as HTMLTextAreaElement).value.trim();
+    if (!groupName || !membersInput) {
+      alert("Bitte gib einen Namen und Mitglieder an.");
+      return;
+    }
+    const members = membersInput.split(",").map(n => n.trim()).filter(Boolean);
+    if (members.length < 1) {
+      alert("Mindestens ein Mitglied muss angegeben werden.");
+      return;
+    }
+    const group: Group = { name: groupName, members };
+    groups.push(group);
+    currentGroup = group;
+    hideModal();
+  });
 });

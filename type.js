@@ -34,4 +34,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.getElementById("modalCancel").addEventListener("click", hideModal);
   createGroupBtn.addEventListener("click", showModal);
+
+  document.getElementById("modalCreate").addEventListener("click", function () {
+    var groupName = document.getElementById("modalGroupName").value.trim();
+    var membersInput = document.getElementById("modalMembers").value.trim();
+    if (!groupName || !membersInput) {
+      alert("Bitte gib einen Namen und Mitglieder an.");
+      return;
+    }
+    var members = membersInput.split(",").map(function (n) { return n.trim(); }).filter(Boolean);
+    if (members.length < 1) {
+      alert("Mindestens ein Mitglied muss angegeben werden.");
+      return;
+    }
+    var group = { name: groupName, members: members };
+    groups.push(group);
+    currentGroup = group;
+    hideModal();
+  });
 });
