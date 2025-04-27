@@ -52,6 +52,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const group: Group = { name: groupName, members };
     groups.push(group);
     currentGroup = group;
+    renderGroups();
     hideModal();
   });
+  function renderGroups(): void {
+    groupList.innerHTML = "";
+    groups.forEach(group => {
+      const li = document.createElement("li");
+      li.textContent = `${group.name} (${group.members.join(", ")})`;
+      li.style.cursor = "pointer";
+      li.onclick = () => {
+        currentGroup = group;
+        updatePersonDropdown();
+      };
+      groupList.appendChild(li);
+    });
+  }
+
+  function updatePersonDropdown(): void {
+    if (!currentGroup) return;
+    personSelect.innerHTML = "";
+    currentGroup.members.sort().forEach(member => {
+      personSelect.appendChild(new Option(member, member));
+    });
+  }
 });

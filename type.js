@@ -50,6 +50,29 @@ document.addEventListener("DOMContentLoaded", function () {
     var group = { name: groupName, members: members };
     groups.push(group);
     currentGroup = group;
+    renderGroups();
     hideModal();
   });
+  function renderGroups() {
+    groupList.innerHTML = "";
+    groups.forEach(function (group) {
+      var li = document.createElement("li");
+      li.textContent = group.name + " (" + group.members.join(", ") + ")";
+      li.style.cursor = "pointer";
+      li.onclick = function () {
+        currentGroup = group;
+        updatePersonDropdown();
+      };
+      groupList.appendChild(li);
+    });
+  }
+
+  function updatePersonDropdown() {
+    if (!currentGroup) return;
+    personSelect.innerHTML = "";
+    currentGroup.members.sort().forEach(function (member) {
+      var opt = new Option(member, member);
+      personSelect.appendChild(opt);
+    });
+  }
 });
